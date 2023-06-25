@@ -42,7 +42,56 @@
             }
 
         }
+
+
+        public function updateCustomer(array $dataCustomer,$idCustomer) {
+            if(isset($dataCustomer["first_name"]) && !preg_match('/^[a-zA-Z]+$/', $dataCustomer["first_name"])){
+                sendError(404,"Error the name field only allows letters."); 
+                return;
+            }
+            if(isset($dataCustomer["last_name"]) && !preg_match('/^[a-zA-Z]+$/', $dataCustomer["last_name"])){
+                sendError(404,"Error the surname field only allows letters."); 
+                return;
+            }
+            if(isset($dataCustomer["email"]) && !preg_match('/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/', $dataCustomer["email"])){
+                sendError(404,"Invalid email format error."); 
+                return;
+            }
+
+            $hasCustomers = ModelCustomer::findCustomerByEmail($dataCustomer["email"]);
+            if (!empty($hasCustomers)) {
+                sendError(404,"Error email already exists."); 
+                return;
+            }
+             
+            $data= array (
+                "first_name"=> $dataCustomer["first_name"],
+                "last_name"=> $dataCustomer["last_name"],
+                "email" => $dataCustomer["email"],
+                "update_at"=>date('Y-m-d h:i:s'),
+            );
+  
+            $update = ModelCustomer::updateCustomer($data,$idCustomer);
+            if($update=="ok"){
+                sendResponse(200, "OK", $data);
+                return;
+            }else{
+                sendError(404,$update); 
+                return; 
+            }
+
+        }
         
+        public function deleteCustomer($idCustomer) {
+            $delete = ModelCustomer::deleteCustomer($idCustomer);
+            if(!empty($delete)){
+                sendResponse(200, "OK");
+            }else{
+                sendError(404,"Customer not found"); 
+            }
+            return;
+        }
+
         public function listCustomers() {
             $customers = ModelCustomer::listCustomers();
             sendResponse(200, "OK", $customers);

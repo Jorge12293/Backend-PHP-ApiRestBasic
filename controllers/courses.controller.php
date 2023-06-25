@@ -52,21 +52,26 @@
                 "price"=>$dataCourse["price"],
                 "update_at"=>date('Y-m-d h:i:s'),
             );
-
-            $json=array(
-                "detalle"=> $data
-            );
-
-            echo json_encode($json,true);
-            return;
+            
+            $update = ModelCourse::updateCourse($data,$idCourse);
+            if($update=="ok"){
+                sendResponse(200, "OK", $data);
+                return;
+            }else{
+                sendError(404, $update); 
+                return; 
+            }
         }
 
         public function deleteCourse($idCourse) {
-            $json=array(
-                "detalle"=>"Delete Course ".$idCourse
-            );
-            echo json_encode($json,true);
-            return;
+            $delete = ModelCourse::deleteCourse($idCourse);
+            if($delete=="ok"){
+                sendResponse(200, "OK");
+                return;
+            }else{
+                sendError(404, $delete); 
+                return; 
+            }
         }
 
         public function listCourses() {

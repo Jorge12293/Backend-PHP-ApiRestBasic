@@ -34,7 +34,7 @@
 
     if( count(array_filter($arrayRoutes)) == 4 && is_numeric(array_filter($arrayRoutes)[4]) &&
         isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "DELETE" ){
-
+            
         $courses->deleteCourse(array_filter($arrayRoutes)[4]);
         return;
     }

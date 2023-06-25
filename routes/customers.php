@@ -17,8 +17,24 @@
             "last_name"=> $_POST["last_name"],
             "email" => $_POST["email"],
         );
-        $customers = new ControllerCustomers();
+
         $customers->createCustomer($dataCustomer);
+        return;
+    }
+
+    if( count(array_filter($arrayRoutes)) == 4 && is_numeric(array_filter($arrayRoutes)[4]) &&
+        isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "PUT" ){
+        
+        $data = file_get_contents('php://input');
+        $dataCustomer = json_decode($data, true);
+        $customers->updateCustomer($dataCustomer,array_filter($arrayRoutes)[4]);
+        return;
+    }
+    
+    if( count(array_filter($arrayRoutes)) == 4 && is_numeric(array_filter($arrayRoutes)[4]) &&
+        isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "DELETE" ){
+    
+        $customers->deleteCustomer(array_filter($arrayRoutes)[4]);
         return;
     }
 
